@@ -1,5 +1,7 @@
 %{
-#include "token.h"
+// #include "token.h"
+#define YYSTYPE char *
+#include "y.tab.h"
 int cur_line_num = 1;
 void init_scanner();
 void lex_error(char* msg, int line);
@@ -11,43 +13,28 @@ ID                  ([a-zA-Z][a-zA-Z0-9]*)
 %%
 [\n]                { cur_line_num++;   }
 [ \t\r\a]+          { /* ignore */      }
---*\n               { /* comments */    }
+--.*\n              { /* comments */    }
 
-"begin"             { return BEGINSYM;  }
-"end"               { return END;       }
-"read"              { return READ;      }
-"write"             { return WRITE;     }
-"("                 { return LPAREN;    }
-")"                 { return RPAREN;    }
-";"                 { return SEMICOLON; }
-","                 { return COMMA;     }
-":="                { return ASSIGNOP;  }
-"+"                 { return PLUOP;     }
-"-"                 { return MINUSOP;   }
-"SCANEOF"           { return SCANEOF;   }
+"begin"             { yylval = strdup(yytext); return BEGINSYM;  }
+"end"               { yylval = strdup(yytext); return END;       }
+"read"              { yylval = strdup(yytext); return READ;      }
+"write"             { yylval = strdup(yytext); return WRITE;     }
+"("                 { yylval = strdup(yytext); return LPAREN;    }
+")"                 { yylval = strdup(yytext); return RPAREN;    }
+";"                 { yylval = strdup(yytext); return SEMICOLON; }
+","                 { yylval = strdup(yytext); return COMMA;     }
+":="                { yylval = strdup(yytext); return ASSIGNOP;  }
+"+"                 { yylval = strdup(yytext); return PLUOP;     }
+"-"                 { yylval = strdup(yytext); return MINUSOP;   }
+"SCANEOF"           { yylval = strdup(yytext); return SCANEOF;   }
 
-{INTLITERAL}        { return INTLITERAL;}
-{ID}                { return ID;        }
+{INTLITERAL}        { yylval = strdup(yytext); return INTLITERAL;}
+{ID}                { yylval = strdup(yytext); return ID;        }
 <<EOF>>             { return 0; }
 
 .                   { lex_error("Unrecognized character", cur_line_num); }
 
 %%
-
-int main(int argc, char* argv[]) {
-    int token;
-    init_scanner();
-    while (token = yylex()) {
-        print_token(token);
-        puts(yytext);
-    }
-    return 0;
-}
-
-void init_scanner() {
-    printf("%-20s%s\n", "TOKEN-TYPE", "TOKEN-VALUE");
-    printf("--------------------------------------\n");
-}
 
 void lex_error(char* msg, int line) {
     printf("\n Error at line %d: %s\n\n", line, msg);

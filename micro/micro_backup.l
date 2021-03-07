@@ -6,12 +6,12 @@ void lex_error(char* msg, int line);
 %}
 
 INTLITERAL          ([0-9]+)
-ID                  ([A-Z][A-Z0-9]*)
+ID                  ([a-zA-Z][a-zA-Z0-9]*)
 
 %%
 [\n]                { cur_line_num++;   }
 [ \t\r\a]+          { /* ignore */      }
---*\n               { /* comments */    }
+--.*\n              { /* comments */    }
 
 "begin"             { return BEGINSYM;  }
 "end"               { return END;       }

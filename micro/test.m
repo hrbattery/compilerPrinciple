@@ -1,10 +1,10 @@
 begin
-    A := 1; -- this is a comment
-    B := A + 1;
+    A := 111; -- this is a comment
+    B := A + 111;
     -- this is another comment
-    B := B + 1;
+    B := B + 111;
     write (A,B);
     read(A,B);
-    write (A+10, B+10);
+    write (A+100, B+100);
 end
 SCANEOF
