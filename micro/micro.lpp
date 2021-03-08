@@ -1,7 +1,7 @@
 %{
 // #include "token.h"
 #define YYSTYPE char *
-#include "y.tab.h"
+#include "micro.tab.hpp"
 int cur_line_num = 1;
 void init_scanner();
 

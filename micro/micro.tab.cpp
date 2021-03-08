@@ -67,16 +67,23 @@
 
 
 /* First part of user prologue.  */
-#line 1 "micro.y"
+#line 1 "micro.ypp"
 
 #include <stdio.h>
 #include <stdlib.h>
-// #include <unordered_map>
-void yyerror(const char * msg);
+#include <iostream>
+#include <unordered_map>
+#include <string>
 #define YYSTYPE char *
-int yylex ();
+using namespace std;
 
-#line 80 "y.tab.c"
+void yyerror(const char * msg);
+int lookup(char* var);
+int yylex ();
+unordered_map<string, int> map;
+int varCount = 4;
+
+#line 87 "micro.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -99,77 +106,7 @@ int yylex ();
 #  endif
 # endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 1
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token kinds.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    BEGINSYM = 258,                /* BEGINSYM  */
-    END = 259,                     /* END  */
-    READ = 260,                    /* READ  */
-    WRITE = 261,                   /* WRITE  */
-    ID = 262,                      /* ID  */
-    LPAREN = 263,                  /* LPAREN  */
-    RPAREN = 264,                  /* RPAREN  */
-    SEMICOLON = 265,               /* SEMICOLON  */
-    COMMA = 266,                   /* COMMA  */
-    ASSIGNOP = 267,                /* ASSIGNOP  */
-    PLUOP = 268,                   /* PLUOP  */
-    MINUSOP = 269,                 /* MINUSOP  */
-    SCANEOF = 270,                 /* SCANEOF  */
-    INTLITERAL = 271               /* INTLITERAL  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
-#endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define BEGINSYM 258
-#define END 259
-#define READ 260
-#define WRITE 261
-#define ID 262
-#define LPAREN 263
-#define RPAREN 264
-#define SEMICOLON 265
-#define COMMA 266
-#define ASSIGNOP 267
-#define PLUOP 268
-#define MINUSOP 269
-#define SCANEOF 270
-#define INTLITERAL 271
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
-
-
-extern YYSTYPE yylval;
-
-int yyparse (void);
-
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#include "micro.tab.hpp"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -569,8 +506,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    29,    29,    32,    33,    35,    36,    37,    40,    41,
-      44,    45,    48,    49,    50,    53,    54,    55,    58
+       0,    36,    36,    39,    40,    42,    43,    44,    47,    48,
+      51,    52,    55,    56,    57,    60,    61,    62,    65
 };
 #endif
 
@@ -1161,73 +1098,73 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Program: BEGINSYM StmtList END  */
-#line 29 "micro.y"
+#line 36 "micro.ypp"
                                                         { printf("program \t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
-#line 1167 "y.tab.c"
+#line 1104 "micro.tab.cpp"
     break;
 
   case 5: /* Stmt: ID ASSIGNOP Expn SEMICOLON  */
-#line 35 "micro.y"
+#line 42 "micro.ypp"
                                                                  { printf("assign stmt\t%s%s%s\n", yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1173 "y.tab.c"
+#line 1110 "micro.tab.cpp"
     break;
 
   case 6: /* Stmt: READ LPAREN IdList RPAREN SEMICOLON  */
-#line 36 "micro.y"
+#line 43 "micro.ypp"
                                                                  { printf("read stmt\t%s%s%s%s\n", yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1179 "y.tab.c"
+#line 1116 "micro.tab.cpp"
     break;
 
   case 7: /* Stmt: WRITE LPAREN ExpnList RPAREN SEMICOLON  */
-#line 37 "micro.y"
+#line 44 "micro.ypp"
                                                                  { printf("write stmt\t%s%s%s%s\n", yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1185 "y.tab.c"
+#line 1122 "micro.tab.cpp"
     break;
 
   case 8: /* IdList: ID  */
-#line 40 "micro.y"
+#line 47 "micro.ypp"
                                                         { printf("idList's id\t%s\n", yyvsp[0]); }
-#line 1191 "y.tab.c"
+#line 1128 "micro.tab.cpp"
     break;
 
   case 13: /* Expn: Primary PLUOP Expn  */
-#line 49 "micro.y"
+#line 56 "micro.ypp"
                                                         { printf("plus expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); yyval=yyvsp[0]; }
-#line 1197 "y.tab.c"
+#line 1134 "micro.tab.cpp"
     break;
 
   case 14: /* Expn: Primary MINUSOP Expn  */
-#line 50 "micro.y"
+#line 57 "micro.ypp"
                                                         { printf("minus expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
-#line 1203 "y.tab.c"
+#line 1140 "micro.tab.cpp"
     break;
 
   case 15: /* Primary: LPAREN Expn RPAREN  */
-#line 53 "micro.y"
+#line 60 "micro.ypp"
                                                         { printf("paren expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
-#line 1209 "y.tab.c"
+#line 1146 "micro.tab.cpp"
     break;
 
   case 16: /* Primary: ID  */
-#line 54 "micro.y"
-                                                        { printf("id\t%s\n", yyvsp[0]); }
-#line 1215 "y.tab.c"
+#line 61 "micro.ypp"
+                                                        { printf("id\t%s", yyvsp[0]); printf("%d\n", lookup(yyvsp[0])); }
+#line 1152 "micro.tab.cpp"
     break;
 
   case 17: /* Primary: INTLITERAL  */
-#line 55 "micro.y"
+#line 62 "micro.ypp"
                                                         { printf("int\t%d\n", atoi(yyvsp[0])); }
-#line 1221 "y.tab.c"
+#line 1158 "micro.tab.cpp"
     break;
 
   case 18: /* SystemGoal: Program SCANEOF  */
-#line 58 "micro.y"
+#line 65 "micro.ypp"
                                                         { printf("SystemGoal\n"); }
-#line 1227 "y.tab.c"
+#line 1164 "micro.tab.cpp"
     break;
 
 
-#line 1231 "y.tab.c"
+#line 1168 "micro.tab.cpp"
 
       default: break;
     }
@@ -1421,17 +1358,32 @@ yyreturn:
   return yyresult;
 }
 
-#line 60 "micro.y"
+#line 67 "micro.ypp"
 
 
 int main(int argc, char* argv[]) {
-    extern int yydebug;
-    yydebug = 1;
     return yyparse();
 }
 
 void yyerror(const char * msg) {
     printf("error: %s\n", msg);
+};
+
+/*
+ * lookup: try to find variable and return the delay of 
+ */
+int lookup(char* var) {
+    string c = var;
+    if (map.count(c) == 0) {
+        // printf("count %lu. coundn't find id %s. add id\n", map.count(c), c_str(c));
+        // map[var] = varCount;
+        map.insert(pair<string, int>(c, varCount));
+        varCount += 4;
+        return varCount - 4;
+    } else {
+        printf("find var \n");
+        return map[c];
+    }
 };
 
 

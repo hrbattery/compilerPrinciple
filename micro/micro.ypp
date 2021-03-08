@@ -1,11 +1,17 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-// #include <unordered_map>
-void yyerror(const char * msg);
+#include <iostream>
+#include <unordered_map>
+#include <string>
 #define YYSTYPE char *
-int yylex ();
+using namespace std;
 
+void yyerror(const char * msg);
+int lookup(char* var);
+int yylex ();
+unordered_map<string, int> map;
+int varCount = 4;
 %}
 
 %token BEGINSYM END READ WRITE ID
@@ -52,7 +58,7 @@ Expn:           Primary
         ;
 
 Primary:        LPAREN Expn RPAREN                      { printf("paren expn\t%s%s%s\n", $1, $2, $3); }
-        |       ID                                      { printf("id\t%s\n", $1); }
+        |       ID                                      { printf("id\t%s", $1); printf("%d\n", lookup($1)); }
         |       INTLITERAL                              { printf("int\t%d\n", atoi($1)); }
         ;
 
@@ -61,13 +67,28 @@ SystemGoal:     Program SCANEOF                         { printf("SystemGoal\n")
 %%
 
 int main(int argc, char* argv[]) {
-    extern int yydebug;
-    yydebug = 1;
     return yyparse();
 }
 
 void yyerror(const char * msg) {
     printf("error: %s\n", msg);
+};
+
+/*
+ * lookup: try to find variable and return the delay of 
+ */
+int lookup(char* var) {
+    string c = var;
+    if (map.count(c) == 0) {
+        // printf("count %lu. coundn't find id %s. add id\n", map.count(c), c_str(c));
+        // map[var] = varCount;
+        map.insert(pair<string, int>(c, varCount));
+        varCount += 4;
+        return varCount - 4;
+    } else {
+        printf("find var \n");
+        return map[c];
+    }
 };
 
 

@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_MICRO_TAB_HPP_INCLUDED
+# define YY_YY_MICRO_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 1
@@ -71,25 +71,6 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define BEGINSYM 258
-#define END 259
-#define READ 260
-#define WRITE 261
-#define ID 262
-#define LPAREN 263
-#define RPAREN 264
-#define SEMICOLON 265
-#define COMMA 266
-#define ASSIGNOP 267
-#define PLUOP 268
-#define MINUSOP 269
-#define SCANEOF 270
-#define INTLITERAL 271
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -103,4 +84,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_MICRO_TAB_HPP_INCLUDED  */

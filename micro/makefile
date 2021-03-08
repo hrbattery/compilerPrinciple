@@ -1,13 +1,22 @@
-out: 		scanner
+out: 		examp
 
-scanner:	lex.yy.c token.h
-		gcc -o $@ $<
+examp:	micro.tab.o lex.yy.o
+		g++ -o $@ micro.tab.o lex.yy.o
 
-lex.yy.c:	micro.l
-		flex $<
+micro.tab.o: micro.tab.cpp
+		g++ -c $<
+
+micro.tab.cpp: micro.ypp
+		bison -vdt $<
+
+lex.yy.o:	lex.yy.cpp 
+		g++ -c $<
+
+lex.yy.cpp: micro.lpp
+		flex -o $@ $<
 
 test:		test.m
-		./scanner < $<
+		./examp < $<
 
 clean:		
-		rm scanner lex.yy.c
+		rm examp lex.yy.o lex.yy.cpp micro.tab.o micro.tab.cpp micro.tab.hpp micro.output
