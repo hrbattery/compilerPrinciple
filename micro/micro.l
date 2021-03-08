@@ -4,6 +4,7 @@
 #include "y.tab.h"
 int cur_line_num = 1;
 void init_scanner();
+
 void lex_error(char* msg, int line);
 %}
 

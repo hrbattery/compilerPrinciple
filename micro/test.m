@@ -1,6 +1,6 @@
 begin
     A := 111; -- this is a comment
-    B := A + 111;
+    B := A + 111 - 111;
     -- this is another comment
     B := B + 111;
     write (A,B);

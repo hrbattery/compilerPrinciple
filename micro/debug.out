@@ -1,0 +1,25 @@
+int	111
+assign stmt	A:=111
+id	A
+int	111
+int	111
+minus expn	111-111
+plus expn	A+111
+assign stmt	B:=111
+id	B
+int	111
+plus expn	B+111
+assign stmt	B:=111
+id	A
+id	B
+write stmt	write(A)
+read stmt	read(A)
+id	A
+int	100
+plus expn	A+100
+id	B
+int	100
+plus expn	B+100
+write stmt	write(100)
+program 	beginAend
+SystemGoal
