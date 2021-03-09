@@ -12,20 +12,26 @@ Grammar
     6     | WRITE LPAREN ExpnList RPAREN SEMICOLON
 
     7 IdList: ID
-    8       | ID COMMA IdList
 
-    9 ExpnList: Expn
-   10         | Expn COMMA ExpnList
+    8 $@1: %empty
 
-   11 Expn: Primary
-   12     | Primary PLUOP Expn
-   13     | Primary MINUSOP Expn
+    9 IdList: ID $@1 COMMA IdList
 
-   14 Primary: LPAREN Expn RPAREN
-   15        | ID
-   16        | INTLITERAL
+   10 ExpnList: Expn
 
-   17 SystemGoal: Program SCANEOF
+   11 $@2: %empty
+
+   12 ExpnList: Expn $@2 COMMA ExpnList
+
+   13 Expn: Primary
+   14     | Primary PLUOP Expn
+   15     | Primary MINUSOP Expn
+
+   16 Primary: LPAREN Expn RPAREN
+   17        | ID
+   18        | INTLITERAL
+
+   19 SystemGoal: Program
 
 
 Terminals, with rules where they appear
@@ -36,45 +42,50 @@ Terminals, with rules where they appear
     END (259) 1
     READ (260) 5
     WRITE (261) 6
-    ID (262) 4 7 8 15
-    LPAREN (263) 5 6 14
-    RPAREN (264) 5 6 14
+    ID (262) 4 7 9 17
+    LPAREN (263) 5 6 16
+    RPAREN (264) 5 6 16
     SEMICOLON (265) 4 5 6
-    COMMA (266) 8 10
+    COMMA (266) 9 12
     ASSIGNOP (267) 4
-    PLUOP (268) 12
-    MINUSOP (269) 13
-    SCANEOF (270) 17
-    INTLITERAL (271) 16
+    PLUOP (268) 14
+    MINUSOP (269) 15
+    INTLITERAL (270) 18
 
 
 Nonterminals, with rules where they appear
 
-    $accept (17)
+    $accept (16)
         on left: 0
-    Program (18)
+    Program (17)
         on left: 1
-        on right: 17
-    StmtList (19)
+        on right: 19
+    StmtList (18)
         on left: 2 3
         on right: 1 3
-    Stmt (20)
+    Stmt (19)
         on left: 4 5 6
         on right: 2 3
-    IdList (21)
-        on left: 7 8
-        on right: 5 8
+    IdList (20)
+        on left: 7 9
+        on right: 5 9
+    $@1 (21)
+        on left: 8
+        on right: 9
     ExpnList (22)
-        on left: 9 10
-        on right: 6 10
-    Expn (23)
-        on left: 11 12 13
-        on right: 4 9 10 12 13 14
-    Primary (24)
-        on left: 14 15 16
-        on right: 11 12 13
-    SystemGoal (25)
-        on left: 17
+        on left: 10 12
+        on right: 6 12
+    $@2 (23)
+        on left: 11
+        on right: 12
+    Expn (24)
+        on left: 13 14 15
+        on right: 4 10 12 14 15 16
+    Primary (25)
+        on left: 16 17 18
+        on right: 13 14 15
+    SystemGoal (26)
+        on left: 19
         on right: 0
 
 
@@ -102,44 +113,44 @@ State 1
 
 State 2
 
-   17 SystemGoal: Program • SCANEOF
+   19 SystemGoal: Program •
 
-    SCANEOF  shift, and go to state 9
+    $default  reduce using rule 19 (SystemGoal)
 
 
 State 3
 
     0 $accept: SystemGoal • $end
 
-    $end  shift, and go to state 10
+    $end  shift, and go to state 9
 
 
 State 4
 
     5 Stmt: READ • LPAREN IdList RPAREN SEMICOLON
 
-    LPAREN  shift, and go to state 11
+    LPAREN  shift, and go to state 10
 
 
 State 5
 
     6 Stmt: WRITE • LPAREN ExpnList RPAREN SEMICOLON
 
-    LPAREN  shift, and go to state 12
+    LPAREN  shift, and go to state 11
 
 
 State 6
 
     4 Stmt: ID • ASSIGNOP Expn SEMICOLON
 
-    ASSIGNOP  shift, and go to state 13
+    ASSIGNOP  shift, and go to state 12
 
 
 State 7
 
     1 Program: BEGINSYM StmtList • END
 
-    END  shift, and go to state 14
+    END  shift, and go to state 13
 
 
 State 8
@@ -153,269 +164,278 @@ State 8
 
     $default  reduce using rule 2 (StmtList)
 
-    StmtList  go to state 15
+    StmtList  go to state 14
     Stmt      go to state 8
 
 
 State 9
-
-   17 SystemGoal: Program SCANEOF •
-
-    $default  reduce using rule 17 (SystemGoal)
-
-
-State 10
 
     0 $accept: SystemGoal $end •
 
     $default  accept
 
 
-State 11
+State 10
 
     5 Stmt: READ LPAREN • IdList RPAREN SEMICOLON
 
-    ID  shift, and go to state 16
+    ID  shift, and go to state 15
 
-    IdList  go to state 17
+    IdList  go to state 16
+
+
+State 11
+
+    6 Stmt: WRITE LPAREN • ExpnList RPAREN SEMICOLON
+
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
+
+    ExpnList  go to state 20
+    Expn      go to state 21
+    Primary   go to state 22
 
 
 State 12
 
-    6 Stmt: WRITE LPAREN • ExpnList RPAREN SEMICOLON
+    4 Stmt: ID ASSIGNOP • Expn SEMICOLON
 
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
 
-    ExpnList  go to state 21
-    Expn      go to state 22
-    Primary   go to state 23
+    Expn     go to state 23
+    Primary  go to state 22
 
 
 State 13
-
-    4 Stmt: ID ASSIGNOP • Expn SEMICOLON
-
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
-
-    Expn     go to state 24
-    Primary  go to state 23
-
-
-State 14
 
     1 Program: BEGINSYM StmtList END •
 
     $default  reduce using rule 1 (Program)
 
 
-State 15
+State 14
 
     3 StmtList: Stmt StmtList •
 
     $default  reduce using rule 3 (StmtList)
 
 
-State 16
+State 15
 
     7 IdList: ID •
-    8       | ID • COMMA IdList
+    9       | ID • $@1 COMMA IdList
 
-    COMMA  shift, and go to state 25
-
+    COMMA     reduce using rule 8 ($@1)
     $default  reduce using rule 7 (IdList)
+
+    $@1  go to state 24
+
+
+State 16
+
+    5 Stmt: READ LPAREN IdList • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 25
 
 
 State 17
 
-    5 Stmt: READ LPAREN IdList • RPAREN SEMICOLON
+   17 Primary: ID •
 
-    RPAREN  shift, and go to state 26
+    $default  reduce using rule 17 (Primary)
 
 
 State 18
 
-   15 Primary: ID •
+   16 Primary: LPAREN • Expn RPAREN
 
-    $default  reduce using rule 15 (Primary)
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
+
+    Expn     go to state 26
+    Primary  go to state 22
 
 
 State 19
 
-   14 Primary: LPAREN • Expn RPAREN
+   18 Primary: INTLITERAL •
 
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
-
-    Expn     go to state 27
-    Primary  go to state 23
+    $default  reduce using rule 18 (Primary)
 
 
 State 20
 
-   16 Primary: INTLITERAL •
+    6 Stmt: WRITE LPAREN ExpnList • RPAREN SEMICOLON
 
-    $default  reduce using rule 16 (Primary)
+    RPAREN  shift, and go to state 27
 
 
 State 21
 
-    6 Stmt: WRITE LPAREN ExpnList • RPAREN SEMICOLON
+   10 ExpnList: Expn •
+   12         | Expn • $@2 COMMA ExpnList
 
-    RPAREN  shift, and go to state 28
+    COMMA     reduce using rule 11 ($@2)
+    $default  reduce using rule 10 (ExpnList)
+
+    $@2  go to state 28
 
 
 State 22
 
-    9 ExpnList: Expn •
-   10         | Expn • COMMA ExpnList
+   13 Expn: Primary •
+   14     | Primary • PLUOP Expn
+   15     | Primary • MINUSOP Expn
 
-    COMMA  shift, and go to state 29
+    PLUOP    shift, and go to state 29
+    MINUSOP  shift, and go to state 30
 
-    $default  reduce using rule 9 (ExpnList)
+    $default  reduce using rule 13 (Expn)
 
 
 State 23
 
-   11 Expn: Primary •
-   12     | Primary • PLUOP Expn
-   13     | Primary • MINUSOP Expn
+    4 Stmt: ID ASSIGNOP Expn • SEMICOLON
 
-    PLUOP    shift, and go to state 30
-    MINUSOP  shift, and go to state 31
-
-    $default  reduce using rule 11 (Expn)
+    SEMICOLON  shift, and go to state 31
 
 
 State 24
 
-    4 Stmt: ID ASSIGNOP Expn • SEMICOLON
+    9 IdList: ID $@1 • COMMA IdList
 
-    SEMICOLON  shift, and go to state 32
+    COMMA  shift, and go to state 32
 
 
 State 25
 
-    8 IdList: ID COMMA • IdList
+    5 Stmt: READ LPAREN IdList RPAREN • SEMICOLON
 
-    ID  shift, and go to state 16
-
-    IdList  go to state 33
+    SEMICOLON  shift, and go to state 33
 
 
 State 26
 
-    5 Stmt: READ LPAREN IdList RPAREN • SEMICOLON
+   16 Primary: LPAREN Expn • RPAREN
 
-    SEMICOLON  shift, and go to state 34
+    RPAREN  shift, and go to state 34
 
 
 State 27
 
-   14 Primary: LPAREN Expn • RPAREN
+    6 Stmt: WRITE LPAREN ExpnList RPAREN • SEMICOLON
 
-    RPAREN  shift, and go to state 35
+    SEMICOLON  shift, and go to state 35
 
 
 State 28
 
-    6 Stmt: WRITE LPAREN ExpnList RPAREN • SEMICOLON
+   12 ExpnList: Expn $@2 • COMMA ExpnList
 
-    SEMICOLON  shift, and go to state 36
+    COMMA  shift, and go to state 36
 
 
 State 29
 
-   10 ExpnList: Expn COMMA • ExpnList
+   14 Expn: Primary PLUOP • Expn
 
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
 
-    ExpnList  go to state 37
-    Expn      go to state 22
-    Primary   go to state 23
+    Expn     go to state 37
+    Primary  go to state 22
 
 
 State 30
 
-   12 Expn: Primary PLUOP • Expn
+   15 Expn: Primary MINUSOP • Expn
 
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
 
     Expn     go to state 38
-    Primary  go to state 23
+    Primary  go to state 22
 
 
 State 31
-
-   13 Expn: Primary MINUSOP • Expn
-
-    ID          shift, and go to state 18
-    LPAREN      shift, and go to state 19
-    INTLITERAL  shift, and go to state 20
-
-    Expn     go to state 39
-    Primary  go to state 23
-
-
-State 32
 
     4 Stmt: ID ASSIGNOP Expn SEMICOLON •
 
     $default  reduce using rule 4 (Stmt)
 
 
+State 32
+
+    9 IdList: ID $@1 COMMA • IdList
+
+    ID  shift, and go to state 15
+
+    IdList  go to state 39
+
+
 State 33
-
-    8 IdList: ID COMMA IdList •
-
-    $default  reduce using rule 8 (IdList)
-
-
-State 34
 
     5 Stmt: READ LPAREN IdList RPAREN SEMICOLON •
 
     $default  reduce using rule 5 (Stmt)
 
 
+State 34
+
+   16 Primary: LPAREN Expn RPAREN •
+
+    $default  reduce using rule 16 (Primary)
+
+
 State 35
-
-   14 Primary: LPAREN Expn RPAREN •
-
-    $default  reduce using rule 14 (Primary)
-
-
-State 36
 
     6 Stmt: WRITE LPAREN ExpnList RPAREN SEMICOLON •
 
     $default  reduce using rule 6 (Stmt)
 
 
+State 36
+
+   12 ExpnList: Expn $@2 COMMA • ExpnList
+
+    ID          shift, and go to state 17
+    LPAREN      shift, and go to state 18
+    INTLITERAL  shift, and go to state 19
+
+    ExpnList  go to state 40
+    Expn      go to state 21
+    Primary   go to state 22
+
+
 State 37
 
-   10 ExpnList: Expn COMMA ExpnList •
+   14 Expn: Primary PLUOP Expn •
 
-    $default  reduce using rule 10 (ExpnList)
+    $default  reduce using rule 14 (Expn)
 
 
 State 38
 
-   12 Expn: Primary PLUOP Expn •
+   15 Expn: Primary MINUSOP Expn •
 
-    $default  reduce using rule 12 (Expn)
+    $default  reduce using rule 15 (Expn)
 
 
 State 39
 
-   13 Expn: Primary MINUSOP Expn •
+    9 IdList: ID $@1 COMMA IdList •
 
-    $default  reduce using rule 13 (Expn)
+    $default  reduce using rule 9 (IdList)
+
+
+State 40
+
+   12 ExpnList: Expn $@2 COMMA ExpnList •
+
+    $default  reduce using rule 12 (ExpnList)

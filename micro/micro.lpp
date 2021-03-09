@@ -27,7 +27,6 @@ ID                  ([a-zA-Z][a-zA-Z0-9]*)
 ":="                { yylval = strdup(yytext); return ASSIGNOP;  }
 "+"                 { yylval = strdup(yytext); return PLUOP;     }
 "-"                 { yylval = strdup(yytext); return MINUSOP;   }
-"SCANEOF"           { yylval = strdup(yytext); return SCANEOF;   }
 
 {INTLITERAL}        { yylval = strdup(yytext); return INTLITERAL;}
 {ID}                { yylval = strdup(yytext); return ID;        }

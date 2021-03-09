@@ -66,8 +66,7 @@ extern int yydebug;
     ASSIGNOP = 267,                /* ASSIGNOP  */
     PLUOP = 268,                   /* PLUOP  */
     MINUSOP = 269,                 /* MINUSOP  */
-    SCANEOF = 270,                 /* SCANEOF  */
-    INTLITERAL = 271               /* INTLITERAL  */
+    INTLITERAL = 270               /* INTLITERAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

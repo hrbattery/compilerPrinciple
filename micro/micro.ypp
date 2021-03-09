@@ -4,19 +4,27 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+
 #define YYSTYPE char *
 using namespace std;
 
 void yyerror(const char * msg);
 int lookup(char* var);
+void handlePrimary(char* var);
+void add_read();
+void add_write();
+void add_header();
+void add_end();
 int yylex ();
+
 unordered_map<string, int> map;
-int varCount = 4;
+int varCount = 32;
+int operandUsed = 0;
 %}
 
 %token BEGINSYM END READ WRITE ID
 %token LPAREN RPAREN SEMICOLON COMMA
-%token ASSIGNOP PLUOP MINUSOP SCANEOF
+%token ASSIGNOP PLUOP MINUSOP
 %token INTLITERAL
 
 // %type <str_value> Expn StmtList Stmt IdList ExpnList Primary
@@ -33,40 +41,114 @@ int varCount = 4;
 
 %%
 
-Program:        BEGINSYM StmtList END                   { printf("program \t%s%s%s\n", $1, $2, $3); }
+Program:        BEGINSYM StmtList END { 
+                    // printf("program \t%s%s%s\n", $1, $2, $3);
+                }
         ;
 
 StmtList:       Stmt
         |       Stmt StmtList
-
-Stmt:           ID ASSIGNOP Expn SEMICOLON                       { printf("assign stmt\t%s%s%s\n", $1, $2, $3); }
-        |       READ LPAREN IdList RPAREN SEMICOLON              { printf("read stmt\t%s%s%s%s\n", $1, $2, $3, $4); }
-        |       WRITE LPAREN ExpnList RPAREN SEMICOLON           { printf("write stmt\t%s%s%s%s\n", $1, $2, $3, $4); }
         ;
 
-IdList:         ID                                      { printf("idList's id\t%s\n", $1); }
-        |       ID COMMA IdList
+Stmt:           ID ASSIGNOP Expn SEMICOLON { 
+                    // printf("assign stmt\t%s%s%s\n", $1, $2, $3); 
+                    int ida = lookup($1);
+                    if (operandUsed) { // $t0 haven been used -> result in $t0 -> move to $t1
+                        printf("add $t1, $zero, $t0\n");
+                    }
+                    // assign to id's address
+                    printf("sw $t1, %d($s8)\n", ida);
+                    operandUsed = 0;
+                }
+        |       READ LPAREN IdList RPAREN SEMICOLON { 
+                    // printf("read stmt\t%s%s%s%s\n", $1, $2, $3, $4); 
+                }
+        |       WRITE LPAREN ExpnList RPAREN SEMICOLON {
+                    // printf("write stmt\t%s%s%s%s\n", $1, $2, $3, $4);
+                }
         ;
 
-ExpnList:       Expn
-        |       Expn COMMA ExpnList
+IdList:         ID { 
+                    // printf("idList's id\t%s\n", $1);
+                    int ida = lookup($1);
+                    printf("jal __micro_read\n");
+                    printf("sw $v0, %d($s8)\n", ida);
+                }
+        |       ID { 
+                    // printf("idList's ids\t%s\n", $1); 
+                    int ida = lookup($1);
+                    printf("jal __micro_read\n");
+                    printf("sw $v0, %d($s8)\n", ida);
+                }  COMMA IdList
         ;
 
-Expn:           Primary
-        |       Primary PLUOP Expn                      { printf("plus expn\t%s%s%s\n", $1, $2, $3); $$=$3; }
-        |       Primary MINUSOP Expn                    { printf("minus expn\t%s%s%s\n", $1, $2, $3); }
+ExpnList:       Expn {
+                    printf("move $a0, $t%d\n", !operandUsed);
+                    printf("jal __micro_write\n");
+                    operandUsed = 0;
+                }
+        |       Expn {
+                    printf("move $a0, $t%d\n", !operandUsed);
+                    printf("jal __micro_write\n");
+                    operandUsed = 0;
+                } COMMA ExpnList
         ;
 
-Primary:        LPAREN Expn RPAREN                      { printf("paren expn\t%s%s%s\n", $1, $2, $3); }
-        |       ID                                      { printf("id\t%s", $1); printf("%d\n", lookup($1)); }
-        |       INTLITERAL                              { printf("int\t%d\n", atoi($1)); }
+Expn:           Primary {
+                    handlePrimary($1);
+                }
+        |       Primary PLUOP Expn { 
+                    handlePrimary($1);
+                    // printf("plus expn\t%s%s%s\n", $1, $2, $3);
+                    printf("add $t2, $t0, $t1\n");
+                    printf("add $t1, $t2, $zero\n");
+                    operandUsed = 0;
+                }
+        |       Primary MINUSOP Expn {
+                    handlePrimary($1);
+                    // printf("minus expn\t%s%s%s\n", $1, $2, $3);
+                    printf("sub $t2, $t1, $t0\n");
+                    printf("add $t1, $t2, $zero\n");
+                    operandUsed = 0;
+                }
         ;
 
-SystemGoal:     Program SCANEOF                         { printf("SystemGoal\n"); }
+Primary:        LPAREN Expn RPAREN { 
+                    // printf("paren expn\t%s%s%s\n", $1, $2, $3); 
+                }
+        |       ID { 
+                    // printf("id\t%s\n", $1); 
+                    // if (!operandUsed) { // haven't been used, set to $t0
+                    //     operandUsed = 1;
+                    //     printf("lw $t0 %d($sa)\n", lookup($1));
+                    // } else {// have been used, set to $t1
+                    //     printf("lw $t1 %d($sa)\n", lookup($1));   
+                    // }
+                }
+        |       INTLITERAL {
+                    // printf("int\t%d\n", atoi($1));
+                    // if (!operandUsed) { // haven't been used, set to $t0
+                    //     operandUsed = 1;
+                    //     printf("li $t0 %s\n", $1);
+                    // } else {// have been used, set to $t1
+                    //     printf("lw $t1 %s\n", $1);   
+                    // }
+                }
+        ;
+
+SystemGoal:     Program                         { 
+                    // printf("SystemGoal\n"); 
+                    add_end();
+                }
         ;
 %%
 
 int main(int argc, char* argv[]) {
+    // extern int yydebug;
+    // yydebug = 1;
+    add_read();
+    add_write();
+    add_header();
     return yyparse();
 }
 
@@ -81,14 +163,155 @@ int lookup(char* var) {
     string c = var;
     if (map.count(c) == 0) {
         // printf("count %lu. coundn't find id %s. add id\n", map.count(c), c_str(c));
-        // map[var] = varCount;
-        map.insert(pair<string, int>(c, varCount));
+        map[c] = varCount;
+        // map.insert(pair<string, int>(c, varCount));
         varCount += 4;
         return varCount - 4;
     } else {
-        printf("find var \n");
+        // printf("find var \n");
         return map[c];
     }
 };
 
+void handlePrimary(char* var) {
+    if (strcmp("(",var) != 0) {
+        if (strspn(var, "0123456789")==strlen(var)) {
+            // printf("the int is %d\n", atoi(var));
+            if (!operandUsed) { // haven't been used, set to $t0
+                operandUsed = 1;
+                printf("li $t0, %s\n", var);
+            } else {// have been used, set to $t1
+                printf("li $t1, %s\n", var);   
+            }
+        } else { // id
+            int ida = lookup(var);
+            if (!operandUsed) { // haven't been used, set to $t0
+                operandUsed = 1;
+                printf("lw $t0, %d($s8)\n", ida);
+            } else {// have been used, set to $t1
+                printf("lw $t1, %d($s8)\n", ida);   
+            }
+        }
+    }
+};
 
+// add fixed read part
+void add_read() {
+    string read_fix = ".extern scanf\n"
+"	.rdata\n"
+"data_section_$$0: \n"
+"	.asciiz \"%d\"\n"
+// "# gcc headers for __micro_read\n"
+"	.text\n"
+"	.globl __micro_read\n"
+"	.ent __micro_read\n"
+"__micro_read:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 48, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -48\n"
+"	.cprestore 32\n"
+"	sw $ra, 28($sp)\n"
+"	sw $s8, 36($sp)\n"
+"	move $s8, $sp\n"
+"__micro_read_$$branch_0:\n"
+"	li $t0, 40\n"
+"	add $t1, $t0, $s8\n"
+"	la $t0, data_section_$$0\n"
+"\n"
+// "	# start calling scanf\n"
+"	sw $t0, 0($s8)\n"
+"	sw $t1, 4($s8)\n"
+"	lw $a0, 0($s8)\n"
+"	lw $a1, 4($s8)\n"
+"	jal scanf\n"
+"	 \n"
+// "	# end calling scanf\n"
+"	lw $t1, 40($s8)\n"
+"	move $v0, $t1\n"
+"__micro_read_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 36($sp)\n"
+"	lw $ra, 28($sp)\n"
+"	addi $sp, $sp, 48\n"
+"	jr $ra\n"
+"	.end __micro_read\n";
+    cout << read_fix;
+};
+
+// add fixed write part
+void add_write() {
+    string write_fix = ".extern scanf\n"
+    "	.rdata\n"
+"data_section_$$1: \n"
+"	.asciiz \"%d\\n\"\n"
+"# gcc headers for __micro_write\n"
+"	.text\n"
+"	.globl __micro_write\n"
+"	.ent __micro_write\n"
+"__micro_write:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 40, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -40\n"
+"	.cprestore 32\n"
+"	sw $ra, 28($sp)\n"
+"	sw $s8, 36($sp)\n"
+"	move $s8, $sp\n"
+"__micro_write_$$branch_0:\n"
+"	la $t0, data_section_$$1\n"
+// "	# start calling printf\n"
+"	sw $t0, 0($s8)\n"
+"	sw $a0, 4($s8)\n"
+"	lw $a0, 0($s8)\n"
+"	lw $a1, 4($s8)\n"
+"	jal printf\n"
+// "	# end calling printf\n"
+"__micro_write_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 36($sp)\n"
+"	lw $ra, 28($sp)\n"
+"	addi $sp, $sp, 40\n"
+"	jr $ra\n"
+"	.end __micro_write\n";
+    cout << write_fix;
+};
+
+// add fixed main header part
+void add_header() {
+    string main_header = "	.text\n"
+"	.globl main\n"
+"	.ent main\n"
+"main:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 1024, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -1024\n"
+"	.cprestore 24\n"
+"	sw $ra, 20($sp)\n"
+"	sw $s8, 28($sp)\n"
+"	move $s8, $sp\n"
+"main_$$branch_0:\n";
+    cout << main_header;
+};
+
+// add fixed main end part
+void add_end() {
+    string main_end = "main_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 28($sp)\n"
+"	lw $ra, 20($sp)\n"
+"	addi $sp, $sp, 1024\n"
+"	jr $ra\n"
+"	.end main\n";
+    cout << main_end;
+};

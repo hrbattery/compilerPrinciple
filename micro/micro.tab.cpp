@@ -74,16 +74,24 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+
 #define YYSTYPE char *
 using namespace std;
 
 void yyerror(const char * msg);
 int lookup(char* var);
+void handlePrimary(char* var);
+void add_read();
+void add_write();
+void add_header();
+void add_end();
 int yylex ();
-unordered_map<string, int> map;
-int varCount = 4;
 
-#line 87 "micro.tab.cpp"
+unordered_map<string, int> map;
+int varCount = 32;
+int operandUsed = 0;
+
+#line 95 "micro.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -126,17 +134,18 @@ enum yysymbol_kind_t
   YYSYMBOL_ASSIGNOP = 12,                  /* ASSIGNOP  */
   YYSYMBOL_PLUOP = 13,                     /* PLUOP  */
   YYSYMBOL_MINUSOP = 14,                   /* MINUSOP  */
-  YYSYMBOL_SCANEOF = 15,                   /* SCANEOF  */
-  YYSYMBOL_INTLITERAL = 16,                /* INTLITERAL  */
-  YYSYMBOL_YYACCEPT = 17,                  /* $accept  */
-  YYSYMBOL_Program = 18,                   /* Program  */
-  YYSYMBOL_StmtList = 19,                  /* StmtList  */
-  YYSYMBOL_Stmt = 20,                      /* Stmt  */
-  YYSYMBOL_IdList = 21,                    /* IdList  */
+  YYSYMBOL_INTLITERAL = 15,                /* INTLITERAL  */
+  YYSYMBOL_YYACCEPT = 16,                  /* $accept  */
+  YYSYMBOL_Program = 17,                   /* Program  */
+  YYSYMBOL_StmtList = 18,                  /* StmtList  */
+  YYSYMBOL_Stmt = 19,                      /* Stmt  */
+  YYSYMBOL_IdList = 20,                    /* IdList  */
+  YYSYMBOL_21_1 = 21,                      /* $@1  */
   YYSYMBOL_ExpnList = 22,                  /* ExpnList  */
-  YYSYMBOL_Expn = 23,                      /* Expn  */
-  YYSYMBOL_Primary = 24,                   /* Primary  */
-  YYSYMBOL_SystemGoal = 25                 /* SystemGoal  */
+  YYSYMBOL_23_2 = 23,                      /* $@2  */
+  YYSYMBOL_Expn = 24,                      /* Expn  */
+  YYSYMBOL_Primary = 25,                   /* Primary  */
+  YYSYMBOL_SystemGoal = 26                 /* SystemGoal  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -444,21 +453,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  10
+#define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   31
+#define YYLAST   33
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  17
+#define YYNTOKENS  16
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  9
+#define YYNNTS  11
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  18
+#define YYNRULES  20
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  40
+#define YYNSTATES  41
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   271
+#define YYMAXUTOK   270
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -499,15 +508,16 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16
+      15
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    36,    36,    39,    40,    42,    43,    44,    47,    48,
-      51,    52,    55,    56,    57,    60,    61,    62,    65
+       0,    44,    44,    49,    50,    53,    63,    66,    71,    77,
+      77,    85,    90,    90,    97,   100,   107,   116,   119,   128,
+     139
 };
 #endif
 
@@ -525,9 +535,9 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "BEGINSYM", "END",
   "READ", "WRITE", "ID", "LPAREN", "RPAREN", "SEMICOLON", "COMMA",
-  "ASSIGNOP", "PLUOP", "MINUSOP", "SCANEOF", "INTLITERAL", "$accept",
-  "Program", "StmtList", "Stmt", "IdList", "ExpnList", "Expn", "Primary",
-  "SystemGoal", YY_NULLPTR
+  "ASSIGNOP", "PLUOP", "MINUSOP", "INTLITERAL", "$accept", "Program",
+  "StmtList", "Stmt", "IdList", "$@1", "ExpnList", "$@2", "Expn",
+  "Primary", "SystemGoal", YY_NULLPTR
 };
 
 static const char *
@@ -543,7 +553,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271
+     265,   266,   267,   268,   269,   270
 };
 #endif
 
@@ -552,7 +562,7 @@ static const yytype_int16 yytoknum[] =
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-1)
+#define YYTABLE_NINF (-13)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -561,10 +571,11 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       4,    -2,    -4,    12,     5,     6,     3,    15,    -2,   -14,
-     -14,     9,    -6,    -6,   -14,   -14,    10,    11,   -14,    -6,
-     -14,    13,    14,    -5,    16,     9,    17,    19,    20,    -6,
-      -6,    -6,   -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14
+       4,    -2,   -14,     8,     5,     6,     0,    11,    -2,   -14,
+       9,    -6,    -6,   -14,   -14,    10,    13,   -14,    -6,   -14,
+      14,    15,    -3,    17,    18,    20,    16,    21,    22,    -6,
+      -6,   -14,     9,   -14,   -14,   -14,    -6,   -14,   -14,   -14,
+     -14
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -572,22 +583,25 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     0,     3,    18,
-       1,     0,     0,     0,     2,     4,     8,     0,    16,     0,
-      17,     0,    10,    12,     0,     0,     0,     0,     0,     0,
-       0,     0,     5,     9,     6,    15,     7,    11,    13,    14
+       0,     0,    20,     0,     0,     0,     0,     0,     3,     1,
+       0,     0,     0,     2,     4,     8,     0,    18,     0,    19,
+       0,    11,    14,     0,     0,     0,     0,     0,     0,     0,
+       0,     5,     0,     6,    17,     7,     0,    15,    16,    10,
+      13
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -14,   -14,    21,   -14,    -1,     2,   -13,   -14,   -14
+     -14,   -14,    12,   -14,   -13,   -14,    -8,   -14,   -12,   -14,
+     -14
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     7,     8,    17,    21,    22,    23,     3
+      -1,     2,     7,     8,    16,    24,    20,    28,    21,    22,
+       3
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -595,42 +609,45 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      24,    18,    19,     4,     5,     6,    27,     1,    30,    31,
-      20,     9,    10,    11,    12,    13,    16,    38,    39,    14,
-      26,    25,    28,     0,    33,    29,    32,    34,    35,    15,
-      36,    37
+      23,    17,    18,     4,     5,     6,    26,     1,     9,    19,
+      29,    30,    12,    10,    11,    13,    15,    37,    38,    39,
+      14,    -9,    25,    27,     0,    34,   -12,    31,    40,    32,
+      33,    35,     0,    36
 };
 
 static const yytype_int8 yycheck[] =
 {
-      13,     7,     8,     5,     6,     7,    19,     3,    13,    14,
-      16,    15,     0,     8,     8,    12,     7,    30,    31,     4,
-       9,    11,     9,    -1,    25,    11,    10,    10,     9,     8,
-      10,    29
+      12,     7,     8,     5,     6,     7,    18,     3,     0,    15,
+      13,    14,    12,     8,     8,     4,     7,    29,    30,    32,
+       8,    11,     9,     9,    -1,     9,    11,    10,    36,    11,
+      10,    10,    -1,    11
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    18,    25,     5,     6,     7,    19,    20,    15,
-       0,     8,     8,    12,     4,    19,     7,    21,     7,     8,
-      16,    22,    23,    24,    23,    11,     9,    23,     9,    11,
-      13,    14,    10,    21,    10,     9,    10,    22,    23,    23
+       0,     3,    17,    26,     5,     6,     7,    18,    19,     0,
+       8,     8,    12,     4,    18,     7,    20,     7,     8,    15,
+      22,    24,    25,    24,    21,     9,    24,     9,    23,    13,
+      14,    10,    11,    10,     9,    10,    11,    24,    24,    20,
+      22
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    17,    18,    19,    19,    20,    20,    20,    21,    21,
-      22,    22,    23,    23,    23,    24,    24,    24,    25
+       0,    16,    17,    18,    18,    19,    19,    19,    20,    21,
+      20,    22,    23,    22,    24,    24,    24,    25,    25,    25,
+      26
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     1,     2,     4,     5,     5,     1,     3,
-       1,     3,     1,     3,     3,     3,     1,     1,     2
+       0,     2,     3,     1,     2,     4,     5,     5,     1,     0,
+       4,     1,     0,     4,     1,     3,     3,     3,     1,     1,
+       1
 };
 
 
@@ -1098,73 +1115,165 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Program: BEGINSYM StmtList END  */
-#line 36 "micro.ypp"
-                                                        { printf("program \t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
-#line 1104 "micro.tab.cpp"
+#line 44 "micro.ypp"
+                                      { 
+                    // printf("program \t%s%s%s\n", $1, $2, $3);
+                }
+#line 1123 "micro.tab.cpp"
     break;
 
   case 5: /* Stmt: ID ASSIGNOP Expn SEMICOLON  */
-#line 42 "micro.ypp"
-                                                                 { printf("assign stmt\t%s%s%s\n", yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1110 "micro.tab.cpp"
+#line 53 "micro.ypp"
+                                           { 
+                    // printf("assign stmt\t%s%s%s\n", $1, $2, $3); 
+                    int ida = lookup(yyvsp[-3]);
+                    if (operandUsed) { // $t0 haven been used -> result in $t0 -> move to $t1
+                        printf("add $t1, $zero, $t0\n");
+                    }
+                    // assign to id's address
+                    printf("sw $t1, %d($s8)\n", ida);
+                    operandUsed = 0;
+                }
+#line 1138 "micro.tab.cpp"
     break;
 
   case 6: /* Stmt: READ LPAREN IdList RPAREN SEMICOLON  */
-#line 43 "micro.ypp"
-                                                                 { printf("read stmt\t%s%s%s%s\n", yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1116 "micro.tab.cpp"
-    break;
-
-  case 7: /* Stmt: WRITE LPAREN ExpnList RPAREN SEMICOLON  */
-#line 44 "micro.ypp"
-                                                                 { printf("write stmt\t%s%s%s%s\n", yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1]); }
-#line 1122 "micro.tab.cpp"
-    break;
-
-  case 8: /* IdList: ID  */
-#line 47 "micro.ypp"
-                                                        { printf("idList's id\t%s\n", yyvsp[0]); }
-#line 1128 "micro.tab.cpp"
-    break;
-
-  case 13: /* Expn: Primary PLUOP Expn  */
-#line 56 "micro.ypp"
-                                                        { printf("plus expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); yyval=yyvsp[0]; }
-#line 1134 "micro.tab.cpp"
-    break;
-
-  case 14: /* Expn: Primary MINUSOP Expn  */
-#line 57 "micro.ypp"
-                                                        { printf("minus expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
-#line 1140 "micro.tab.cpp"
-    break;
-
-  case 15: /* Primary: LPAREN Expn RPAREN  */
-#line 60 "micro.ypp"
-                                                        { printf("paren expn\t%s%s%s\n", yyvsp[-2], yyvsp[-1], yyvsp[0]); }
+#line 63 "micro.ypp"
+                                                    { 
+                    // printf("read stmt\t%s%s%s%s\n", $1, $2, $3, $4); 
+                }
 #line 1146 "micro.tab.cpp"
     break;
 
-  case 16: /* Primary: ID  */
-#line 61 "micro.ypp"
-                                                        { printf("id\t%s", yyvsp[0]); printf("%d\n", lookup(yyvsp[0])); }
-#line 1152 "micro.tab.cpp"
+  case 7: /* Stmt: WRITE LPAREN ExpnList RPAREN SEMICOLON  */
+#line 66 "micro.ypp"
+                                                       {
+                    // printf("write stmt\t%s%s%s%s\n", $1, $2, $3, $4);
+                }
+#line 1154 "micro.tab.cpp"
     break;
 
-  case 17: /* Primary: INTLITERAL  */
-#line 62 "micro.ypp"
-                                                        { printf("int\t%d\n", atoi(yyvsp[0])); }
-#line 1158 "micro.tab.cpp"
+  case 8: /* IdList: ID  */
+#line 71 "micro.ypp"
+                   { 
+                    // printf("idList's id\t%s\n", $1);
+                    int ida = lookup(yyvsp[0]);
+                    printf("jal __micro_read\n");
+                    printf("sw $v0, %d($s8)\n", ida);
+                }
+#line 1165 "micro.tab.cpp"
     break;
 
-  case 18: /* SystemGoal: Program SCANEOF  */
-#line 65 "micro.ypp"
-                                                        { printf("SystemGoal\n"); }
-#line 1164 "micro.tab.cpp"
+  case 9: /* $@1: %empty  */
+#line 77 "micro.ypp"
+                   { 
+                    // printf("idList's ids\t%s\n", $1); 
+                    int ida = lookup(yyvsp[0]);
+                    printf("jal __micro_read\n");
+                    printf("sw $v0, %d($s8)\n", ida);
+                }
+#line 1176 "micro.tab.cpp"
+    break;
+
+  case 11: /* ExpnList: Expn  */
+#line 85 "micro.ypp"
+                     {
+                    printf("move $a0, $t%d\n", !operandUsed);
+                    printf("jal __micro_write\n");
+                    operandUsed = 0;
+                }
+#line 1186 "micro.tab.cpp"
+    break;
+
+  case 12: /* $@2: %empty  */
+#line 90 "micro.ypp"
+                     {
+                    printf("move $a0, $t%d\n", !operandUsed);
+                    printf("jal __micro_write\n");
+                    operandUsed = 0;
+                }
+#line 1196 "micro.tab.cpp"
+    break;
+
+  case 14: /* Expn: Primary  */
+#line 97 "micro.ypp"
+                        {
+                    handlePrimary(yyvsp[0]);
+                }
+#line 1204 "micro.tab.cpp"
+    break;
+
+  case 15: /* Expn: Primary PLUOP Expn  */
+#line 100 "micro.ypp"
+                                   { 
+                    handlePrimary(yyvsp[-2]);
+                    // printf("plus expn\t%s%s%s\n", $1, $2, $3);
+                    printf("add $t2, $t0, $t1\n");
+                    printf("add $t1, $t2, $zero\n");
+                    operandUsed = 0;
+                }
+#line 1216 "micro.tab.cpp"
+    break;
+
+  case 16: /* Expn: Primary MINUSOP Expn  */
+#line 107 "micro.ypp"
+                                     {
+                    handlePrimary(yyvsp[-2]);
+                    // printf("minus expn\t%s%s%s\n", $1, $2, $3);
+                    printf("sub $t2, $t1, $t0\n");
+                    printf("add $t1, $t2, $zero\n");
+                    operandUsed = 0;
+                }
+#line 1228 "micro.tab.cpp"
+    break;
+
+  case 17: /* Primary: LPAREN Expn RPAREN  */
+#line 116 "micro.ypp"
+                                   { 
+                    // printf("paren expn\t%s%s%s\n", $1, $2, $3); 
+                }
+#line 1236 "micro.tab.cpp"
+    break;
+
+  case 18: /* Primary: ID  */
+#line 119 "micro.ypp"
+                   { 
+                    // printf("id\t%s\n", $1); 
+                    // if (!operandUsed) { // haven't been used, set to $t0
+                    //     operandUsed = 1;
+                    //     printf("lw $t0 %d($sa)\n", lookup($1));
+                    // } else {// have been used, set to $t1
+                    //     printf("lw $t1 %d($sa)\n", lookup($1));   
+                    // }
+                }
+#line 1250 "micro.tab.cpp"
+    break;
+
+  case 19: /* Primary: INTLITERAL  */
+#line 128 "micro.ypp"
+                           {
+                    // printf("int\t%d\n", atoi($1));
+                    // if (!operandUsed) { // haven't been used, set to $t0
+                    //     operandUsed = 1;
+                    //     printf("li $t0 %s\n", $1);
+                    // } else {// have been used, set to $t1
+                    //     printf("lw $t1 %s\n", $1);   
+                    // }
+                }
+#line 1264 "micro.tab.cpp"
+    break;
+
+  case 20: /* SystemGoal: Program  */
+#line 139 "micro.ypp"
+                                                { 
+                    // printf("SystemGoal\n"); 
+                    add_end();
+                }
+#line 1273 "micro.tab.cpp"
     break;
 
 
-#line 1168 "micro.tab.cpp"
+#line 1277 "micro.tab.cpp"
 
       default: break;
     }
@@ -1358,10 +1467,15 @@ yyreturn:
   return yyresult;
 }
 
-#line 67 "micro.ypp"
+#line 144 "micro.ypp"
 
 
 int main(int argc, char* argv[]) {
+    // extern int yydebug;
+    // yydebug = 1;
+    add_read();
+    add_write();
+    add_header();
     return yyparse();
 }
 
@@ -1376,14 +1490,155 @@ int lookup(char* var) {
     string c = var;
     if (map.count(c) == 0) {
         // printf("count %lu. coundn't find id %s. add id\n", map.count(c), c_str(c));
-        // map[var] = varCount;
-        map.insert(pair<string, int>(c, varCount));
+        map[c] = varCount;
+        // map.insert(pair<string, int>(c, varCount));
         varCount += 4;
         return varCount - 4;
     } else {
-        printf("find var \n");
+        // printf("find var \n");
         return map[c];
     }
 };
 
+void handlePrimary(char* var) {
+    if (strcmp("(",var) != 0) {
+        if (strspn(var, "0123456789")==strlen(var)) {
+            // printf("the int is %d\n", atoi(var));
+            if (!operandUsed) { // haven't been used, set to $t0
+                operandUsed = 1;
+                printf("li $t0, %s\n", var);
+            } else {// have been used, set to $t1
+                printf("li $t1, %s\n", var);   
+            }
+        } else { // id
+            int ida = lookup(var);
+            if (!operandUsed) { // haven't been used, set to $t0
+                operandUsed = 1;
+                printf("lw $t0, %d($s8)\n", ida);
+            } else {// have been used, set to $t1
+                printf("lw $t1, %d($s8)\n", ida);   
+            }
+        }
+    }
+};
 
+// add fixed read part
+void add_read() {
+    string read_fix = ".extern scanf\n"
+"	.rdata\n"
+"data_section_$$0: \n"
+"	.asciiz \"%d\"\n"
+// "# gcc headers for __micro_read\n"
+"	.text\n"
+"	.globl __micro_read\n"
+"	.ent __micro_read\n"
+"__micro_read:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 48, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -48\n"
+"	.cprestore 32\n"
+"	sw $ra, 28($sp)\n"
+"	sw $s8, 36($sp)\n"
+"	move $s8, $sp\n"
+"__micro_read_$$branch_0:\n"
+"	li $t0, 40\n"
+"	add $t1, $t0, $s8\n"
+"	la $t0, data_section_$$0\n"
+"\n"
+// "	# start calling scanf\n"
+"	sw $t0, 0($s8)\n"
+"	sw $t1, 4($s8)\n"
+"	lw $a0, 0($s8)\n"
+"	lw $a1, 4($s8)\n"
+"	jal scanf\n"
+"	 \n"
+// "	# end calling scanf\n"
+"	lw $t1, 40($s8)\n"
+"	move $v0, $t1\n"
+"__micro_read_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 36($sp)\n"
+"	lw $ra, 28($sp)\n"
+"	addi $sp, $sp, 48\n"
+"	jr $ra\n"
+"	.end __micro_read\n";
+    cout << read_fix;
+};
+
+// add fixed write part
+void add_write() {
+    string write_fix = ".extern scanf\n"
+    "	.rdata\n"
+"data_section_$$1: \n"
+"	.asciiz \"%d\\n\"\n"
+"# gcc headers for __micro_write\n"
+"	.text\n"
+"	.globl __micro_write\n"
+"	.ent __micro_write\n"
+"__micro_write:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 40, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -40\n"
+"	.cprestore 32\n"
+"	sw $ra, 28($sp)\n"
+"	sw $s8, 36($sp)\n"
+"	move $s8, $sp\n"
+"__micro_write_$$branch_0:\n"
+"	la $t0, data_section_$$1\n"
+// "	# start calling printf\n"
+"	sw $t0, 0($s8)\n"
+"	sw $a0, 4($s8)\n"
+"	lw $a0, 0($s8)\n"
+"	lw $a1, 4($s8)\n"
+"	jal printf\n"
+// "	# end calling printf\n"
+"__micro_write_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 36($sp)\n"
+"	lw $ra, 28($sp)\n"
+"	addi $sp, $sp, 40\n"
+"	jr $ra\n"
+"	.end __micro_write\n";
+    cout << write_fix;
+};
+
+// add fixed main header part
+void add_header() {
+    string main_header = "	.text\n"
+"	.globl main\n"
+"	.ent main\n"
+"main:\n"
+// "	# prologue area\n"
+"	.set noreorder\n"
+"	.frame $s8, 1024, $ra\n"
+"	.cpload $t9\n"
+"	.set reorder \n"
+"	addi $sp, $sp, -1024\n"
+"	.cprestore 24\n"
+"	sw $ra, 20($sp)\n"
+"	sw $s8, 28($sp)\n"
+"	move $s8, $sp\n"
+"main_$$branch_0:\n";
+    cout << main_header;
+};
+
+// add fixed main end part
+void add_end() {
+    string main_end = "main_$$epilogue:\n"
+// "	# epilogue area\n"
+"	move $sp, $s8\n"
+"	lw $s8, 28($sp)\n"
+"	lw $ra, 20($sp)\n"
+"	addi $sp, $sp, 1024\n"
+"	jr $ra\n"
+"	.end main\n";
+    cout << main_end;
+};

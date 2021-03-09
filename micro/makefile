@@ -16,7 +16,7 @@ lex.yy.cpp: micro.lpp
 		flex -o $@ $<
 
 test:		test.m
-		./examp < $<
+		./examp < $< > output.log
 
 clean:		
-		rm examp lex.yy.o lex.yy.cpp micro.tab.o micro.tab.cpp micro.tab.hpp micro.output
+		rm examp lex.yy.o lex.yy.cpp micro.tab.o micro.tab.cpp micro.tab.hpp micro.output output.log
