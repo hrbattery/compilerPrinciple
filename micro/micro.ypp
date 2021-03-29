@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <unordered_map>
-#include <string>
+#include <cstring>
 
 #define YYSTYPE char *
 using namespace std;
@@ -27,23 +27,14 @@ int operandUsed = 0;
 %token ASSIGNOP PLUOP MINUSOP
 %token INTLITERAL
 
-// %type <str_value> Expn StmtList Stmt IdList ExpnList Primary
-
 %left ASSIGNOP
 %left PLUOP MINUSOP
 
 %start SystemGoal
 
-// %union {
-//     int num;
-//     char* str_value;
-// }
-
 %%
 
-Program:        BEGINSYM StmtList END { 
-                    // printf("program \t%s%s%s\n", $1, $2, $3);
-                }
+Program:        BEGINSYM StmtList END { }
         ;
 
 StmtList:       Stmt
@@ -51,7 +42,6 @@ StmtList:       Stmt
         ;
 
 Stmt:           ID ASSIGNOP Expn SEMICOLON { 
-                    // printf("assign stmt\t%s%s%s\n", $1, $2, $3); 
                     int ida = lookup($1);
                     if (operandUsed) { // $t0 haven been used -> result in $t0 -> move to $t1
                         printf("add $t1, $zero, $t0\n");
@@ -60,22 +50,16 @@ Stmt:           ID ASSIGNOP Expn SEMICOLON {
                     printf("sw $t1, %d($s8)\n", ida);
                     operandUsed = 0;
                 }
-        |       READ LPAREN IdList RPAREN SEMICOLON { 
-                    // printf("read stmt\t%s%s%s%s\n", $1, $2, $3, $4); 
-                }
-        |       WRITE LPAREN ExpnList RPAREN SEMICOLON {
-                    // printf("write stmt\t%s%s%s%s\n", $1, $2, $3, $4);
-                }
+        |       READ LPAREN IdList RPAREN SEMICOLON { }
+        |       WRITE LPAREN ExpnList RPAREN SEMICOLON { }
         ;
 
 IdList:         ID { 
-                    // printf("idList's id\t%s\n", $1);
                     int ida = lookup($1);
                     printf("jal __micro_read\n");
                     printf("sw $v0, %d($s8)\n", ida);
                 }
         |       ID { 
-                    // printf("idList's ids\t%s\n", $1); 
                     int ida = lookup($1);
                     printf("jal __micro_read\n");
                     printf("sw $v0, %d($s8)\n", ida);
@@ -99,45 +83,24 @@ Expn:           Primary {
                 }
         |       Primary PLUOP Expn { 
                     handlePrimary($1);
-                    // printf("plus expn\t%s%s%s\n", $1, $2, $3);
                     printf("add $t2, $t0, $t1\n");
                     printf("add $t1, $t2, $zero\n");
                     operandUsed = 0;
                 }
         |       Primary MINUSOP Expn {
                     handlePrimary($1);
-                    // printf("minus expn\t%s%s%s\n", $1, $2, $3);
                     printf("sub $t2, $t1, $t0\n");
                     printf("add $t1, $t2, $zero\n");
                     operandUsed = 0;
                 }
         ;
 
-Primary:        LPAREN Expn RPAREN { 
-                    // printf("paren expn\t%s%s%s\n", $1, $2, $3); 
-                }
-        |       ID { 
-                    // printf("id\t%s\n", $1); 
-                    // if (!operandUsed) { // haven't been used, set to $t0
-                    //     operandUsed = 1;
-                    //     printf("lw $t0 %d($sa)\n", lookup($1));
-                    // } else {// have been used, set to $t1
-                    //     printf("lw $t1 %d($sa)\n", lookup($1));   
-                    // }
-                }
-        |       INTLITERAL {
-                    // printf("int\t%d\n", atoi($1));
-                    // if (!operandUsed) { // haven't been used, set to $t0
-                    //     operandUsed = 1;
-                    //     printf("li $t0 %s\n", $1);
-                    // } else {// have been used, set to $t1
-                    //     printf("lw $t1 %s\n", $1);   
-                    // }
-                }
+Primary:        LPAREN Expn RPAREN { }
+        |       ID { }
+        |       INTLITERAL {}
         ;
 
 SystemGoal:     Program                         { 
-                    // printf("SystemGoal\n"); 
                     add_end();
                 }
         ;

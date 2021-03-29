@@ -73,7 +73,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <unordered_map>
-#include <string>
+#include <cstring>
 
 #define YYSTYPE char *
 using namespace std;
@@ -513,11 +513,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int8 yyrline[] =
 {
-       0,    44,    44,    49,    50,    53,    63,    66,    71,    77,
-      77,    85,    90,    90,    97,   100,   107,   116,   119,   128,
-     139
+       0,    37,    37,    40,    41,    44,    53,    54,    57,    62,
+      62,    69,    74,    74,    81,    84,    90,    98,    99,   100,
+     103
 };
 #endif
 
@@ -1115,17 +1115,14 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Program: BEGINSYM StmtList END  */
-#line 44 "micro.ypp"
-                                      { 
-                    // printf("program \t%s%s%s\n", $1, $2, $3);
-                }
-#line 1123 "micro.tab.cpp"
+#line 37 "micro.ypp"
+                                      { }
+#line 1121 "micro.tab.cpp"
     break;
 
   case 5: /* Stmt: ID ASSIGNOP Expn SEMICOLON  */
-#line 53 "micro.ypp"
+#line 44 "micro.ypp"
                                            { 
-                    // printf("assign stmt\t%s%s%s\n", $1, $2, $3); 
                     int ida = lookup(yyvsp[-3]);
                     if (operandUsed) { // $t0 haven been used -> result in $t0 -> move to $t1
                         printf("add $t1, $zero, $t0\n");
@@ -1134,146 +1131,119 @@ yyreduce:
                     printf("sw $t1, %d($s8)\n", ida);
                     operandUsed = 0;
                 }
-#line 1138 "micro.tab.cpp"
+#line 1135 "micro.tab.cpp"
     break;
 
   case 6: /* Stmt: READ LPAREN IdList RPAREN SEMICOLON  */
-#line 63 "micro.ypp"
-                                                    { 
-                    // printf("read stmt\t%s%s%s%s\n", $1, $2, $3, $4); 
-                }
-#line 1146 "micro.tab.cpp"
+#line 53 "micro.ypp"
+                                                    { }
+#line 1141 "micro.tab.cpp"
     break;
 
   case 7: /* Stmt: WRITE LPAREN ExpnList RPAREN SEMICOLON  */
-#line 66 "micro.ypp"
-                                                       {
-                    // printf("write stmt\t%s%s%s%s\n", $1, $2, $3, $4);
-                }
-#line 1154 "micro.tab.cpp"
+#line 54 "micro.ypp"
+                                                       { }
+#line 1147 "micro.tab.cpp"
     break;
 
   case 8: /* IdList: ID  */
-#line 71 "micro.ypp"
+#line 57 "micro.ypp"
                    { 
-                    // printf("idList's id\t%s\n", $1);
                     int ida = lookup(yyvsp[0]);
                     printf("jal __micro_read\n");
                     printf("sw $v0, %d($s8)\n", ida);
                 }
-#line 1165 "micro.tab.cpp"
+#line 1157 "micro.tab.cpp"
     break;
 
   case 9: /* $@1: %empty  */
-#line 77 "micro.ypp"
+#line 62 "micro.ypp"
                    { 
-                    // printf("idList's ids\t%s\n", $1); 
                     int ida = lookup(yyvsp[0]);
                     printf("jal __micro_read\n");
                     printf("sw $v0, %d($s8)\n", ida);
                 }
-#line 1176 "micro.tab.cpp"
+#line 1167 "micro.tab.cpp"
     break;
 
   case 11: /* ExpnList: Expn  */
-#line 85 "micro.ypp"
+#line 69 "micro.ypp"
                      {
                     printf("move $a0, $t%d\n", !operandUsed);
                     printf("jal __micro_write\n");
                     operandUsed = 0;
                 }
-#line 1186 "micro.tab.cpp"
+#line 1177 "micro.tab.cpp"
     break;
 
   case 12: /* $@2: %empty  */
-#line 90 "micro.ypp"
+#line 74 "micro.ypp"
                      {
                     printf("move $a0, $t%d\n", !operandUsed);
                     printf("jal __micro_write\n");
                     operandUsed = 0;
                 }
-#line 1196 "micro.tab.cpp"
+#line 1187 "micro.tab.cpp"
     break;
 
   case 14: /* Expn: Primary  */
-#line 97 "micro.ypp"
+#line 81 "micro.ypp"
                         {
                     handlePrimary(yyvsp[0]);
                 }
-#line 1204 "micro.tab.cpp"
+#line 1195 "micro.tab.cpp"
     break;
 
   case 15: /* Expn: Primary PLUOP Expn  */
-#line 100 "micro.ypp"
+#line 84 "micro.ypp"
                                    { 
                     handlePrimary(yyvsp[-2]);
-                    // printf("plus expn\t%s%s%s\n", $1, $2, $3);
                     printf("add $t2, $t0, $t1\n");
                     printf("add $t1, $t2, $zero\n");
                     operandUsed = 0;
                 }
-#line 1216 "micro.tab.cpp"
+#line 1206 "micro.tab.cpp"
     break;
 
   case 16: /* Expn: Primary MINUSOP Expn  */
-#line 107 "micro.ypp"
+#line 90 "micro.ypp"
                                      {
                     handlePrimary(yyvsp[-2]);
-                    // printf("minus expn\t%s%s%s\n", $1, $2, $3);
                     printf("sub $t2, $t1, $t0\n");
                     printf("add $t1, $t2, $zero\n");
                     operandUsed = 0;
                 }
-#line 1228 "micro.tab.cpp"
+#line 1217 "micro.tab.cpp"
     break;
 
   case 17: /* Primary: LPAREN Expn RPAREN  */
-#line 116 "micro.ypp"
-                                   { 
-                    // printf("paren expn\t%s%s%s\n", $1, $2, $3); 
-                }
-#line 1236 "micro.tab.cpp"
+#line 98 "micro.ypp"
+                                   { }
+#line 1223 "micro.tab.cpp"
     break;
 
   case 18: /* Primary: ID  */
-#line 119 "micro.ypp"
-                   { 
-                    // printf("id\t%s\n", $1); 
-                    // if (!operandUsed) { // haven't been used, set to $t0
-                    //     operandUsed = 1;
-                    //     printf("lw $t0 %d($sa)\n", lookup($1));
-                    // } else {// have been used, set to $t1
-                    //     printf("lw $t1 %d($sa)\n", lookup($1));   
-                    // }
-                }
-#line 1250 "micro.tab.cpp"
+#line 99 "micro.ypp"
+                   { }
+#line 1229 "micro.tab.cpp"
     break;
 
   case 19: /* Primary: INTLITERAL  */
-#line 128 "micro.ypp"
-                           {
-                    // printf("int\t%d\n", atoi($1));
-                    // if (!operandUsed) { // haven't been used, set to $t0
-                    //     operandUsed = 1;
-                    //     printf("li $t0 %s\n", $1);
-                    // } else {// have been used, set to $t1
-                    //     printf("lw $t1 %s\n", $1);   
-                    // }
-                }
-#line 1264 "micro.tab.cpp"
+#line 100 "micro.ypp"
+                           {}
+#line 1235 "micro.tab.cpp"
     break;
 
   case 20: /* SystemGoal: Program  */
-#line 139 "micro.ypp"
+#line 103 "micro.ypp"
                                                 { 
-                    // printf("SystemGoal\n"); 
                     add_end();
                 }
-#line 1273 "micro.tab.cpp"
+#line 1243 "micro.tab.cpp"
     break;
 
 
-#line 1277 "micro.tab.cpp"
+#line 1247 "micro.tab.cpp"
 
       default: break;
     }
@@ -1467,7 +1437,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 144 "micro.ypp"
+#line 107 "micro.ypp"
 
 
 int main(int argc, char* argv[]) {
