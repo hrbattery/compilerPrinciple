@@ -12,10 +12,6 @@ int main(int argc, char* argv[]) {
         }
     }
     printf("%s", "Result: \n");
-    // while (1) {
-    //     fp = scan(fp);
-    //     if (feof(fp)) break;
-    // }
     scan(fp);
     fclose(fp);
     fp = NULL;

@@ -1,0 +1,16 @@
+int    main(int a      ,int b,
+                    int c,int d){
+    int  inta;
+    inta = (a+b)/c*d;
+    int input = scanf();
+    
+    if(inta == 233 || inta >= 233){
+        printf(inta);
+    }
+    else{
+        do{inta += 1;}while(inta != 233);
+    }
+    
+}
+    return (-2+ 3);
+}

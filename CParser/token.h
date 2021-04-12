@@ -20,8 +20,14 @@ typedef enum tokenType {
     LT, GT, SHL_OP, SHR_OP, EQ,
     NOTEQ, LTEQ, GTEQ, ANDAND, OROR,
     COMMA, POINT,
-    INT_NUM, ID
+    INT_NUM, ID,
+    program = 256, var_decls, var_decl, decl_list, decl,
+    code_block, stmts, stmt, ctrl_stmt, rw_stmt,
+    assign_stmt, if_statement, if_stmt, while_stmt, do_while_stmt, ret_stmt,
+    r_stmt, w_stmt, expr, EMPTY
 } tokenType;
+
+typedef tokenType Symbol;
 
 // token: Save the information of token element.
 typedef struct token {
@@ -113,7 +119,7 @@ void raiseError(void) {
 }
 
 // scan(): The implementation of the DFA.
-void scan(FILE* fp) {
+vector<token> scan(FILE* fp) {
     /* ch: Current scanned character.
      * nextch: Next scanned character. Used when needed.
      * buf: Save the raw literal of token.
@@ -322,6 +328,7 @@ void scan(FILE* fp) {
             break;
         }
     }
+    return tokenList;
 }
 
 #endif
