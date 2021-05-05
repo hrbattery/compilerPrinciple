@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="parser" targetName="parser" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dcc7fc96-ea0f-45c2-97fd-5c016ff75de5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/DFA.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/fileIO.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/regexTree.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/scanner.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/parser.dir/src/scanner.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/parser" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/parser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scanner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scanner.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scanner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scanner.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testfiles/test_hard.in" beforeDir="false" afterPath="$PROJECT_DIR$/testfiles/test_hard.in" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="ccjeff &lt;jefferycao.czj@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1qnzQi3ofOOXfThaAsV7qYu5QgR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="parser" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$PROJECT_DIR$/testfiles/test_simple.in" PASS_PARENT_ENVS_2="true" PROJECT_NAME="parser" TARGET_NAME="parser" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="parser" RUN_TARGET_NAME="parser">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dcc7fc96-ea0f-45c2-97fd-5c016ff75de5" name="Default Changelist" comment="" />
+      <created>1617730127702</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1617730127702</updated>
+      <workItem from="1617730129094" duration="41693000" />
+      <workItem from="1618286469991" duration="14325000" />
+    </task>
+    <task id="LOCAL-00001" summary="added parser remove immediate left recursion">
+      <created>1618076188226</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1618076188226</updated>
+    </task>
+    <task id="LOCAL-00002" summary="partial done preprocessing">
+      <created>1618141613860</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1618141613860</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Partial done parser, need to fix right associative">
+      <created>1618299743605</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1618299743606</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="added parser remove immediate left recursion" />
+    <MESSAGE value="partial done preprocessing" />
+    <MESSAGE value="Partial done parser, need to fix right associative" />
+    <option name="LAST_COMMIT_MESSAGE" value="Partial done parser, need to fix right associative" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="496" y="237" key="#New_File_Extensions" timestamp="1617731773030">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state x="496" y="237" key="#New_File_Extensions/0.23.1792.1097@0.23.1792.1097" timestamp="1617731773029" />
+    <state x="360" y="214" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1618320138048">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="360" y="214" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1792.1120@0.0.1792.1120" timestamp="1618320138048" />
+    <state x="360" y="233" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1792.1097@0.23.1792.1097" timestamp="1617731253542" />
+    <state x="360" y="214" key="#com.intellij.execution.impl.EditConfigurationsDialog/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035072472" />
+    <state x="615" y="381" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1617961552592">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state x="615" y="381" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1792.1097@0.23.1792.1097" timestamp="1617961552592" />
+    <state x="634" y="314" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1618286494350">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="634" y="314" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1792.1120@0.0.1792.1120" timestamp="1618286494350" />
+    <state x="479" y="160" key="CommitChangelistDialog2" timestamp="1618299743340">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="479" y="160" key="CommitChangelistDialog2/0.0.1792.1120@0.0.1792.1120" timestamp="1618299743340" />
+    <state width="1750" height="727" key="GridCell.Tab.0.bottom" timestamp="1618397076786">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="727" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1618397076786" />
+    <state width="1750" height="303" key="GridCell.Tab.0.bottom/0.23.1792.1097@0.23.1792.1097" timestamp="1617731530994" />
+    <state width="1750" height="303" key="GridCell.Tab.0.bottom/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035098034" />
+    <state width="1750" height="727" key="GridCell.Tab.0.center" timestamp="1618397076785">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="727" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1618397076785" />
+    <state width="1750" height="303" key="GridCell.Tab.0.center/0.23.1792.1097@0.23.1792.1097" timestamp="1617731530993" />
+    <state width="1750" height="303" key="GridCell.Tab.0.center/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035098032" />
+    <state width="1750" height="727" key="GridCell.Tab.0.left" timestamp="1618397076784">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="727" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1618397076784" />
+    <state width="1750" height="303" key="GridCell.Tab.0.left/0.23.1792.1097@0.23.1792.1097" timestamp="1617731530992" />
+    <state width="1750" height="303" key="GridCell.Tab.0.left/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035098032" />
+    <state width="1750" height="727" key="GridCell.Tab.0.right" timestamp="1618397076785">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="727" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1618397076785" />
+    <state width="1750" height="303" key="GridCell.Tab.0.right/0.23.1792.1097@0.23.1792.1097" timestamp="1617731530993" />
+    <state width="1750" height="303" key="GridCell.Tab.0.right/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035098033" />
+    <state width="1750" height="248" key="GridCell.Tab.1.bottom" timestamp="1618306099546">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="248" key="GridCell.Tab.1.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1618306099546" />
+    <state width="1750" height="391" key="GridCell.Tab.1.bottom/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035097289" />
+    <state width="1750" height="248" key="GridCell.Tab.1.center" timestamp="1618306099545">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="248" key="GridCell.Tab.1.center/0.0.1792.1120@0.0.1792.1120" timestamp="1618306099545" />
+    <state width="1750" height="391" key="GridCell.Tab.1.center/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035097288" />
+    <state width="1750" height="248" key="GridCell.Tab.1.left" timestamp="1618306099544">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="248" key="GridCell.Tab.1.left/0.0.1792.1120@0.0.1792.1120" timestamp="1618306099544" />
+    <state width="1750" height="391" key="GridCell.Tab.1.left/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035097287" />
+    <state width="1750" height="248" key="GridCell.Tab.1.right" timestamp="1618306099545">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state width="1750" height="248" key="GridCell.Tab.1.right/0.0.1792.1120@0.0.1792.1120" timestamp="1618306099545" />
+    <state width="1750" height="391" key="GridCell.Tab.1.right/1792.102.1048.770/0.0.1792.1120@0.0.1792.1120" timestamp="1618035097288" />
+    <state x="397" y="199" key="SettingsEditor" timestamp="1618141931979">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="397" y="199" key="SettingsEditor/0.0.1792.1120@0.0.1792.1120" timestamp="1618141931979" />
+    <state x="561" y="251" width="670" height="676" key="search.everywhere.popup" timestamp="1618143889836">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="561" y="251" width="670" height="676" key="search.everywhere.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1618143889836" />
+  </component>
+</project>

@@ -1,0 +1,8 @@
+int  inta,   intb;
+int input;
+int intt[10];
+inta = (a+b)/c*d;
+scanf(input);
+if(inta > 233 && intt[1] >= 233){ printf(inta);}
+else{do{input = input + 1;}while(inta != 233);}
+return;
