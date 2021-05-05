@@ -10,7 +10,7 @@ compi1er: main.cpp
 # 	$(CXX) $(CFLAGS) $< -o $@
 
 clean:
-	rm ./LALR
+	rm ./compi1er
 
 test:  
-	./LALR test.c > result.txt
+	./compi1er test.txt > result.s

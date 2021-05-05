@@ -1,12 +1,88 @@
-int  inta=100;
-int input;
-int intt[10];
-int a = 0;
-int b = 1;
-int c = 3;
-int d = 5;
-inta = (a+b)/c*d;
-scanf(input);
-if(inta < 233 || intt[1] >= 233){ printf(inta);}
-else{do{input = input + 1;}while(inta != 233);}
+int a = 1;
+int b = 6;
+int c;
+int d[10];
+int e,f,g;
+
+c = a+b;
+printf(c);
+
+c = a-b;
+printf(c);
+
+c = a*b;
+printf(c);
+
+c = a/b;
+printf(c);
+
+c = b-a;
+printf(c);
+
+c = b/a;
+printf(c);
+
+c = a>b;
+printf(c);
+
+c = a<b;
+printf(c);
+
+c = a>=b;
+printf(c);
+
+c = a<=b;
+printf(c);
+
+c = a==b;
+printf(c);
+
+c = a!=b;
+printf(c);
+
+c = a&b;
+printf(c);
+
+c = a|b;
+printf(c);
+
+c = a&&b;
+printf(c);
+
+c = a||b;
+printf(c);
+
+c = b<<a;
+printf(c);
+
+c = b>>a;
+printf(c);
+
+d[1] = a*b+b/a-a/b;
+printf(d[a]);
+
+d[0] = d[1] > 1;
+printf(d[0]);
+
+scanf(e);
+scanf(f);
+
+if (d[1] == 12) {
+    printf(e+f+100);
+} else {
+    printf(e-f+1024);
+}
+
+d[0] = 10;
+
+while (d[0] > 0) {
+    printf(d[0]);
+    d[0] = d[0]-1;
+}
+
+do {
+    printf(d[0]);
+    d[0] = d[0]+1;
+} while(d[0]<10);
+
 return;

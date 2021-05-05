@@ -162,7 +162,7 @@ int lookup(string var) {
     string c = var;
     if (symbolTable.count(c) == 0) {
         if (tempSymbolTable.count(c) == 0) {
-            printf("Undefined symbol: %s", var.c_str());
+            printf("aaaUndefined symbol: %s", var.c_str());
             exit(1);
         } else {
             // printf("find var \n");
@@ -289,7 +289,7 @@ string tokenExecutor(token& tkn) {
                 return tokenExecutor(tkn.children[0]);
                 break;
             }
-            case assign_stmt: {// ID [ expr ] = expr 或者 ID = expr
+            case assign_stmt: { // ID [ expr ] = expr 或者 ID = expr
                 if (tkn.children.size() == 3) { // ID = expr
                     string idPos = lookup(tkn.children[0].value, 0);
                     string exprPos = tokenExecutor(tkn.children[2]);
@@ -301,21 +301,24 @@ string tokenExecutor(token& tkn) {
                     tempVarCount = 0;
                     expCode = "";
                     return ret;
-                } else {
+                } else { // ID [ expr ] = expr
+                    printf("444");
                     string idPos = std::to_string(lookup(tkn.children[0].value));
+                    printf("555");
                     string exprPos1 = tokenExecutor(tkn.children[2]); // 该expr的结果存在exprPos1中了
                     ret = expCode;
-                    ret += "\tlw $t0, "+exprPos1+"\n"; // 数组偏移量还需要*4
-                    ret += "\tsll $t0, $t0, 2\n";
-                    ret += "\taddi $t0, $zero, "+idPos+"\n"; // t0现在存的是到id[expr1]的offset
+                    ret += "\tlw $t3, "+exprPos1+"\n"; // 数组偏移量还需要*4
+                    ret += "\tsll $t3, $t3, 2\n";
+                    ret += "\taddi $t3, $t3, "+idPos+"\n"; // t0现在存的是到id[expr1]的offset
+                    ret += "\tadd $t4, $t3, $s8\n";
                     // clear tempVars
                     tempSymbolTable.clear();
                     tempVarCount = 0;
                     expCode = "";
                     string exprPos2 = tokenExecutor(tkn.children[5]);
-                    ret += "\tlw $t1, "+exprPos2+"\n";;
-                    ret += "\tadd $t2, $t0, $s8\n";;
-                    ret += "\tsw $t1, 0($t2)\n";
+                    ret += expCode;
+                    ret += "\tlw $t1, "+exprPos2+"\n";
+                    ret += "\tsw $t1, 0($t4)\n";
                     // clear tempVars
                     tempSymbolTable.clear();
                     tempVarCount = 0;
@@ -583,14 +586,14 @@ string tokenExecutor(token& tkn) {
                     string expOp2 = tokenExecutor(tkn.children[2]);
                     expCode += "\tlw $t0, "+expOp1+"\n";
                     expCode += "\tlw $t1, "+expOp2+"\n";
-                    if (tkn.children[1].tokentype == MUL_OP) {
+                    if (tkn.children[1].tokentype == PLUS) {
                         expCode += "\tadd $t2, $t1, $t0\n";
                         // 申请新临时变量
                         string swPos = registTempVar();
                         expCode += "\tsw $t2, " + swPos + "\n";
                         return swPos;
                     } else {
-                        expCode += "\tdiv $t2, $t0, $t1\n";
+                        expCode += "\tsub $t2, $t0, $t1\n";
                         // 申请新临时变量
                         string swPos = registTempVar();
                         expCode += "\tsw $t2, " + swPos + "\n";
@@ -650,9 +653,11 @@ string tokenExecutor(token& tkn) {
                 } else if (tkn.children[0].tokentype == ID) { // ID [ exp ]
                     string expRet = tokenExecutor(tkn.children[2]); // 约定返回的是offset($s8)的形式
                     expRet = "\tlw $t0, "+expRet+"\n"; // 之后补上exp是int_num的情况，这里是移动exp返回的地址内的值到$t0，也就是偏移量
+                    printf("111");
                     int varOff = lookup(tkn.children[0].value); // varOff = id的偏移量
+                    printf("222");
+                    expRet += "\tsll $t0, $t0, 2\n";
                     expRet += "\taddi $t1, $t0, "+std::to_string(varOff)+"\n"; // $t1 = $t0 + varOff = 总偏移量，用$t1($s8)就可以取到想取的值了
-                    expRet += "\tsll $t1, $t1, 2\n";
                     expRet += "\tadd $t2, $s8, $t1\n";
                     expRet += "\tlw $t0, 0($t2)\n";
                     // 申请一个新临时变量地址(swPos)
